@@ -7,7 +7,7 @@ import (
 	"github.com/dduuddeekk/go-restaurant-app/internal/database"
 	"github.com/dduuddeekk/go-restaurant-app/internal/delivery/rest"
 	mRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/menu"
-	rRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/order"
+	oRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/order"
 	rUsecase "github.com/dduuddeekk/go-restaurant-app/internal/usecase/resto"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -33,7 +33,7 @@ func main() {
 
 	db := database.GetDB(dbAddress)
 	menuRepo := mRepo.GetRepository(db)
-	orderRepo := rRepo.GetRepository(db)
+	orderRepo := oRepo.GetRepository(db)
 	restoUsecase := rUsecase.GetUsecase(menuRepo, orderRepo)
 	h := rest.NewHandler(restoUsecase)
 
