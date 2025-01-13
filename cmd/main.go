@@ -37,6 +37,7 @@ func main() {
 	restoUsecase := rUsecase.GetUsecase(menuRepo, orderRepo)
 	h := rest.NewHandler(restoUsecase)
 
+	rest.LoadMiddlewares(e)
 	rest.LoadRoutes(e, h)
 
 	e.Logger.Fatal(e.Start(":14045"))
