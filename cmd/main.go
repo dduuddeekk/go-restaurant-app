@@ -8,6 +8,7 @@ import (
 	"github.com/dduuddeekk/go-restaurant-app/internal/delivery/rest"
 	mRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/menu"
 	oRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/order"
+	uRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/user"
 	rUsecase "github.com/dduuddeekk/go-restaurant-app/internal/usecase/resto"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -32,9 +33,17 @@ func main() {
 	e := echo.New()
 
 	db := database.GetDB(dbAddress)
+	secret := os.Getenv("SECRET")
+
 	menuRepo := mRepo.GetRepository(db)
 	orderRepo := oRepo.GetRepository(db)
-	restoUsecase := rUsecase.GetUsecase(menuRepo, orderRepo)
+	userRepo, err := uRepo.GetRepository(db, secret, 1, 64*1024, 4, 32)
+	if err != nil {
+		panic(err)
+	}
+
+	restoUsecase := rUsecase.GetUsecase(menuRepo, orderRepo, userRepo)
+
 	h := rest.NewHandler(restoUsecase)
 
 	rest.LoadMiddlewares(e)
