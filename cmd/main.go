@@ -1,8 +1,11 @@
 package main
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/dduuddeekk/go-restaurant-app/internal/database"
 	"github.com/dduuddeekk/go-restaurant-app/internal/delivery/rest"
@@ -34,10 +37,14 @@ func main() {
 
 	db := database.GetDB(dbAddress)
 	secret := os.Getenv("SECRET")
+	signKey, err := rsa.GenerateKey(rand.Reader, 4096)
+	if err != nil {
+		panic(err)
+	}
 
 	menuRepo := mRepo.GetRepository(db)
 	orderRepo := oRepo.GetRepository(db)
-	userRepo, err := uRepo.GetRepository(db, secret, 1, 64*1024, 4, 32)
+	userRepo, err := uRepo.GetRepository(db, secret, 1, 64*1024, 4, 32, signKey, 60*time.Second)
 	if err != nil {
 		panic(err)
 	}

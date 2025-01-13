@@ -100,3 +100,25 @@ func (r *restoUsecase) RegisterUser(request model.RegisterRequest) (model.User, 
 
 	return userData, nil
 }
+
+func (r *restoUsecase) Login(request model.LoginRequest) (model.UserSession, error) {
+	userData, err := r.userRepo.GetUserData(request.Username)
+	if err != nil {
+		return model.UserSession{}, err
+	}
+	verified, err := r.userRepo.VerifyLogin(request.Username, request.Password, userData)
+	if err != nil {
+		return model.UserSession{}, err
+	}
+
+	if !verified {
+		return model.UserSession{}, errors.New("can't verify user login")
+	}
+
+	userSession, err := r.userRepo.CreateUserSession(userData.ID)
+	if err != nil {
+		return model.UserSession{}, err
+	}
+
+	return userSession, nil
+}
