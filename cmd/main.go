@@ -9,6 +9,7 @@ import (
 
 	"github.com/dduuddeekk/go-restaurant-app/internal/database"
 	"github.com/dduuddeekk/go-restaurant-app/internal/delivery/rest"
+	"github.com/dduuddeekk/go-restaurant-app/internal/logger"
 	mRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/menu"
 	oRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/order"
 	uRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/user"
@@ -33,6 +34,7 @@ func init() {
 }
 
 func main() {
+	logger.Init()
 	e := echo.New()
 
 	db := database.GetDB(dbAddress)

@@ -8,6 +8,7 @@ import (
 	"github.com/dduuddeekk/go-restaurant-app/internal/model"
 	"github.com/dduuddeekk/go-restaurant-app/internal/model/constant"
 	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
 )
 
 func (h *handler) Order(c echo.Context) error {
@@ -47,7 +48,9 @@ func (h *handler) GetOrderInfo(c echo.Context) error {
 		OrderID: orderID,
 	})
 	if err != nil {
-		fmt.Printf("got error %s\n", err.Error())
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("[delivery][rest][order_handler][GetOrderInfo] unable to get order data")
 
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
