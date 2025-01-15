@@ -13,6 +13,7 @@ import (
 	mRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/menu"
 	oRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/order"
 	uRepo "github.com/dduuddeekk/go-restaurant-app/internal/repository/user"
+	"github.com/dduuddeekk/go-restaurant-app/internal/tracing"
 	rUsecase "github.com/dduuddeekk/go-restaurant-app/internal/usecase/resto"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -35,6 +36,8 @@ func init() {
 
 func main() {
 	logger.Init()
+	url := os.Getenv("TRACE_URL")
+	tracing.Init(url)
 	e := echo.New()
 
 	db := database.GetDB(dbAddress)

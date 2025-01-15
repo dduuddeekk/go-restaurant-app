@@ -44,10 +44,13 @@ func (h *handler) Order(c echo.Context) error {
 }
 
 func (h *handler) GetOrderInfo(c echo.Context) error {
+	ctx, span := tracing.CreateSpan(c.Request().Context(), "GetOrderInfo")
+	defer span.End()
+
 	orderID := c.Param("orderID")
 	userID := c.Request().Context().Value(constant.AuthContextKey).(string)
 
-	orderData, err := h.restoUsecase.GetOrderInfo(model.GetOrderInfoRequest{
+	orderData, err := h.restoUsecase.GetOrderInfo(ctx, model.GetOrderInfoRequest{
 		UserID:  userID,
 		OrderID: orderID,
 	})
